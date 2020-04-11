@@ -11,12 +11,10 @@ export const normaliseDurationToDays = (periodType, timeToElapse) => {
   }
 };
 
-export const estimateCurrentlyInfected = (reportedCases) => {
-  return {
-    impact: reportedCases * 10,
-    severe: reportedCases * 50
-  };
-};
+export const estimateCurrentlyInfected = (reportedCases) => ({
+  impact: reportedCases * 10,
+  severe: reportedCases * 50
+});
 
 export const estimateInfectionsByRequestedTime = (
   currentlyInfected,
@@ -58,6 +56,61 @@ export const estimateHospitalBedsByRequestedTime = (
   const availabilityBeds = Math.trunc(0.35 * totalHospitalBeds);
   const impact = availabilityBeds - severeCasesByRequestedTime.impact;
   const severe = availabilityBeds - severeCasesByRequestedTime.severe;
+  return {
+    impact,
+    severe
+  };
+};
+
+// estimated number of severe positive cases that will require ICU care
+export const estimateCasesForICUByRequestedTime = (
+  infectionsByRequestedTime
+) => {
+  // 5% of infectionsByRequestedTime
+  const impact = Math.trunc(0.05 * infectionsByRequestedTime.impact);
+  const severe = Math.trunc(0.05 * infectionsByRequestedTime.severe);
+
+  return {
+    impact,
+    severe
+  };
+};
+
+// estimated number of severe positive cases that will require ventilators
+export const estimateCasesForVentilatorsByRequestedTime = (
+  infectionsByRequestedTime
+) => {
+  // 2% of infectionsByRequestedTime
+  const impact = Math.trunc(0.02 * infectionsByRequestedTime.impact);
+  const severe = Math.trunc(0.02 * infectionsByRequestedTime.severe);
+
+  return {
+    impact,
+    severe
+  };
+};
+
+// estimate how much money the economy is likely to lose daily, over the said period of time
+export const estimateDollarsInFlight = (
+  infectionsByRequestedTime,
+  avgDailyIncomeInUSD,
+  avgDailyIncomePopulation,
+  duration
+) => {
+  // (infectionsByRequestedTime x 0.65 x 1.5) / 30
+  const impact = Math.trunc(
+    (infectionsByRequestedTime.impact
+      * avgDailyIncomePopulation
+      * avgDailyIncomeInUSD)
+      / duration
+  );
+  const severe = Math.trunc(
+    (infectionsByRequestedTime.severe
+      * avgDailyIncomePopulation
+      * avgDailyIncomeInUSD)
+      / duration
+  );
+
   return {
     impact,
     severe
