@@ -1,4 +1,5 @@
 import { estimateSevereCasesByRequestedTime } from '../index';
+
 const infectionsByRequestedTime = {
   impact: 100,
   severe: 500

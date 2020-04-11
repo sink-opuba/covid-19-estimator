@@ -1,14 +1,11 @@
 export const normaliseDurationToDays = (periodType, timeToElapse) => {
-  const time = parseInt(timeToElapse);
-  if (periodType === 'days') {
-    return time;
-  }
+  let time = +timeToElapse;
   if (periodType === 'weeks') {
-    return time * 7;
+    time *= 7;
+  } else if (periodType === 'months') {
+    time *= 30;
   }
-  if (periodType === 'months') {
-    return time * 30;
-  }
+  return time;
 };
 
 export const estimateCurrentlyInfected = (reportedCases) => ({
