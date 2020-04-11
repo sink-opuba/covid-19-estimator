@@ -46,3 +46,20 @@ export const estimateSevereCasesByRequestedTime = (
     severe
   };
 };
+
+// determine the number of available beds
+export const estimateHospitalBedsByRequestedTime = (
+  totalHospitalBeds,
+  severeCasesByRequestedTime
+) => {
+  // On average, 65% of hospital beds are already occupied by patients
+  //  and many hospitals usually are at 90% or 95% capacity
+  // we expect only a 35% bed availability in hospitals for severe COVID-19 positive patients
+  const availabilityBeds = Math.trunc(0.35 * totalHospitalBeds);
+  const impact = availabilityBeds - severeCasesByRequestedTime.impact;
+  const severe = availabilityBeds - severeCasesByRequestedTime.severe;
+  return {
+    impact,
+    severe
+  };
+};
