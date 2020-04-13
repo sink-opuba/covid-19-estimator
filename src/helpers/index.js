@@ -5,7 +5,7 @@ export const normaliseDurationToDays = (periodType, timeToElapse) => {
   } else if (periodType === 'months') {
     time *= 30;
   }
-  return time;
+  return Math.trunc(time);
 };
 
 export const estimateCurrentlyInfected = (reportedCases) => ({
@@ -50,9 +50,9 @@ export const estimateHospitalBedsByRequestedTime = (
   // On average, 65% of hospital beds are already occupied by patients
   //  and many hospitals usually are at 90% or 95% capacity
   // we expect only a 35% bed availability in hospitals for severe COVID-19 positive patients
-  const availabilityBeds = Math.trunc(0.35 * totalHospitalBeds);
-  const impact = availabilityBeds - severeCasesByRequestedTime.impact;
-  const severe = availabilityBeds - severeCasesByRequestedTime.severe;
+  const availabilityBeds = 0.35 * totalHospitalBeds;
+  const impact = Math.trunc(availabilityBeds - severeCasesByRequestedTime.impact);
+  const severe = Math.trunc(availabilityBeds - severeCasesByRequestedTime.severe);
   return {
     impact,
     severe
